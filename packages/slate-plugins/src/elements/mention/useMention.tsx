@@ -44,7 +44,9 @@ export const useMention = (
             unit: "character",
           });
 
-          Transforms.select(editor, middlePoint);
+          if (middlePoint) {
+            Transforms.select(editor, middlePoint);
+          }
         }
 
         return setTargetRange(null);

@@ -15,9 +15,13 @@ export const isWordAfterMentionTrigger = (
   const lastOpenMatch = lineText.match(/^.*\[\[(.+)/);
   const matchFromLineStart = lastOpenMatch && lastOpenMatch[0];
   const matchFromMentionStart = lastOpenMatch && lastOpenMatch[1];
-  const prefixLen = matchFromLineStart?.length - matchFromMentionStart?.length;
+  const prefixLen =
+    matchFromLineStart &&
+    matchFromMentionStart &&
+    matchFromLineStart?.length - matchFromMentionStart?.length;
   const beforeRangeStart =
     lineStart &&
+    prefixLen &&
     Editor.after(editor, lineStart, {
       unit: "character",
       distance: prefixLen,

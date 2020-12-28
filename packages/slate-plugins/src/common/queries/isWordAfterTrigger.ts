@@ -12,11 +12,12 @@ export const isWordAfterTrigger = (
 ) => {
   // Point at the start of previous word (excluding punctuation)
   const wordBefore = Editor.before(editor, at, { unit: "word" });
-
+  /*
   // Point before wordBefore
   const before =
     wordBefore &&
     Editor.before(editor, wordBefore, { unit: "character", distance: 2 });
+  */
 
   const lineStart = Editor.before(editor, at, { unit: "line" });
   const lineRange = lineStart && Editor.range(editor, lineStart, at);
@@ -24,10 +25,7 @@ export const isWordAfterTrigger = (
   const lastOpenMatch = lineText.match(/^.*\[\[(.+)/);
   const matchFromLineStart = lastOpenMatch && lastOpenMatch[0];
   const matchFromMentionStart = lastOpenMatch && lastOpenMatch[1];
-  //console.dir(lastOpenMatch);
-  console.dir(`${matchFromLineStart}:${matchFromMentionStart}`);
   const prefixLen = matchFromLineStart?.length - matchFromMentionStart?.length;
-
   const beforeRangeStart = Editor.after(editor, lineStart, {
     unit: "character",
     distance: prefixLen,

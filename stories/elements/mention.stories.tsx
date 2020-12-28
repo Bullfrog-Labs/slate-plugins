@@ -37,7 +37,7 @@ export const Example = () => {
         rootProps: {
           onClick: (mentionable: MentionNodeData) =>
             console.info(`Hello, I'm ${mentionable.value}`),
-          prefix: text("prefix", "@"),
+          prefix: text("prefix", ""),
         },
       },
     }),
@@ -64,7 +64,6 @@ export const Example = () => {
       values,
     } = useMention(MENTIONABLES, {
       maxSuggestions: 10,
-      trigger: "[[",
     });
 
     return (

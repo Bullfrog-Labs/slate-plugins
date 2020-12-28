@@ -1,6 +1,9 @@
 import { useCallback, useState } from "react";
 import { Editor, Range, Transforms } from "slate";
-import { isPointAtMentionEnd, isWordAfterTrigger } from "../../common/queries";
+import {
+  isPointAtMentionEnd,
+  isWordAfterMentionTrigger,
+} from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
 import { insertMention } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
@@ -13,9 +16,6 @@ export const useMention = (
   const [targetRange, setTargetRange] = useState<Range | null>(null);
   const [valueIndex, setValueIndex] = useState(0);
   const [search, setSearch] = useState("");
-
-  console.log(`trigger=${trigger}, search=${search}`);
-
   const values = mentionables
     .filter((c) => c.value.toLowerCase().includes(search.toLowerCase()))
     .slice(0, maxSuggestions);
@@ -33,8 +33,6 @@ export const useMention = (
 
   const onKeyDownMention = useCallback(
     (e: any, editor: Editor) => {
-      console.log(`key: ${e.key}`);
-
       // Match square brackets.
       if (e.key === "[") {
         const { selection } = editor;
@@ -90,10 +88,13 @@ export const useMention = (
       if (selection && isCollapsed(selection)) {
         const cursor = Range.start(selection);
 
-        const { range, match: beforeMatch } = isWordAfterTrigger(editor, {
-          at: cursor,
-          trigger,
-        });
+        const { range, match: beforeMatch } = isWordAfterMentionTrigger(
+          editor,
+          {
+            at: cursor,
+            trigger,
+          }
+        );
 
         if (beforeMatch && isPointAtMentionEnd(editor, { at: cursor })) {
           setTargetRange(range as Range);

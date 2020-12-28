@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Editor, Range, Transforms } from "slate";
-import { isPointAtWordEnd, isWordAfterTrigger } from "../../common/queries";
+import { isPointAtMentionEnd, isWordAfterTrigger } from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
 import { insertMention } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
@@ -8,11 +8,14 @@ import { getNextIndex, getPreviousIndex } from "./utils";
 
 export const useMention = (
   mentionables: MentionNodeData[] = [],
-  { maxSuggestions = 10, trigger = "9", ...options }: UseMentionOptions = {}
+  { maxSuggestions = 10, trigger = "@", ...options }: UseMentionOptions = {}
 ) => {
   const [targetRange, setTargetRange] = useState<Range | null>(null);
   const [valueIndex, setValueIndex] = useState(0);
   const [search, setSearch] = useState("");
+
+  console.log(`trigger=${trigger}, search=${search}`);
+
   const values = mentionables
     .filter((c) => c.value.toLowerCase().includes(search.toLowerCase()))
     .slice(0, maxSuggestions);
@@ -30,6 +33,25 @@ export const useMention = (
 
   const onKeyDownMention = useCallback(
     (e: any, editor: Editor) => {
+      console.log(`key: ${e.key}`);
+
+      // Match square brackets.
+      if (e.key === "[") {
+        const { selection } = editor;
+        if (selection && isCollapsed(selection)) {
+          e.preventDefault();
+          Transforms.insertText(editor, "[]");
+          const cursor = Range.start(selection);
+          const middlePoint = Editor.after(editor, cursor, {
+            unit: "character",
+          });
+
+          Transforms.select(editor, middlePoint);
+        }
+
+        return setTargetRange(null);
+      }
+
       if (targetRange) {
         if (e.key === "ArrowDown") {
           e.preventDefault();
@@ -73,7 +95,7 @@ export const useMention = (
           trigger,
         });
 
-        if (beforeMatch && isPointAtWordEnd(editor, { at: cursor })) {
+        if (beforeMatch && isPointAtMentionEnd(editor, { at: cursor })) {
           setTargetRange(range as Range);
           const [, word] = beforeMatch;
           setSearch(word);

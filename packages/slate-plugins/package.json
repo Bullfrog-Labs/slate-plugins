@@ -1,5 +1,5 @@
 {
-  "name": "@bullfrog/slate-plugins",
+  "name": "@blfrg.xyz/slate-plugins",
   "version": "0.71.10",
   "description": "Slate Plugins",
   "keywords": [],
@@ -52,7 +52,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "2bc6ba9d39c71e6a49d0ac55363154d19f7612a5",
+  "gitHead": "55122558d7812baf3d578781ee5c2441725388a9",
   "devDependencies": {
     "@types/marked": "^1.1.0",
     "react-dnd-test-backend": "^11.1.3"

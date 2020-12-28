@@ -1,5 +1,5 @@
 {
-  "name": "@bullfrog/slate-plugins-core",
+  "name": "@blfrg.xyz/slate-plugins-core",
   "version": "0.71.9",
   "description": "Slate plugins core",
   "keywords": [],
@@ -32,5 +32,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "55122558d7812baf3d578781ee5c2441725388a9"
 }

@@ -22,10 +22,7 @@ export const isWordAfterMentionTrigger = (
   const beforeRangeStart =
     lineStart &&
     prefixLen &&
-    Editor.after(editor, lineStart, {
-      unit: "character",
-      distance: prefixLen,
-    });
+    Editor.after(editor, lineStart, { distance: prefixLen });
   const beforeRange =
     beforeRangeStart && Editor.range(editor, beforeRangeStart, at);
 

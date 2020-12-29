@@ -23,7 +23,14 @@ export const useMention = (
   const onAddMention = useCallback(
     (editor: Editor, data: MentionNodeData) => {
       if (targetRange !== null) {
-        Transforms.select(editor, targetRange);
+        const mentionStart = Editor.before(editor, Range.start(targetRange), {
+          distance: 2,
+        });
+        const mentionEnd = Editor.after(editor, Range.end(targetRange), {
+          distance: 2,
+        });
+        const mentionRange = Editor.range(editor, mentionStart, mentionEnd);
+        Transforms.select(editor, mentionRange);
         insertMention(editor, data, options);
         return setTargetRange(null);
       }

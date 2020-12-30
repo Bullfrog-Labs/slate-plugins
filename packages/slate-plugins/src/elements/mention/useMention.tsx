@@ -85,13 +85,20 @@ export const useMention = (
           e.preventDefault();
           console.log(`sp index ${valueIndex}`);
           console.dir(values);
-          onAddMention(editor, values[valueIndex]);
+          if (valueIndex < values.length) {
+            onAddMention(editor, values[valueIndex]);
+          } else {
+            console.log(
+              `skipping mention add since data not consistent; index=${valueIndex}, values.length=${values.length}`
+            );
+          }
           return false;
         }
       }
     },
     [
       values,
+      values.length,
       valueIndex,
       setValueIndex,
       targetRange,

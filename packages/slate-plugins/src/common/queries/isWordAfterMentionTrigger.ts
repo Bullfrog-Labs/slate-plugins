@@ -10,19 +10,22 @@ export const isWordAfterMentionTrigger = (
   { at, trigger }: { at: Point; trigger: string }
 ) => {
   const lineStart = Editor.before(editor, at, { unit: "line" });
+
   const lineRange = lineStart && Editor.range(editor, lineStart, at);
   const lineText = getText(editor, lineRange);
   const lastOpenMatch = lineText.match(/^.*\[\[(.+)/);
-  const matchFromLineStart = lastOpenMatch && lastOpenMatch[0];
   const matchFromMentionStart = lastOpenMatch && lastOpenMatch[1];
-  const prefixLen =
-    matchFromLineStart &&
-    matchFromMentionStart &&
-    matchFromLineStart?.length - matchFromMentionStart?.length;
+
+  // Find point by starting from beginning of match, not beginning of line, as
+  // that method is unreliable.
   const beforeRangeStart =
     lineStart &&
-    prefixLen &&
-    Editor.after(editor, lineStart, { distance: prefixLen });
+    matchFromMentionStart &&
+    Editor.before(editor, at, {
+      distance: matchFromMentionStart.length,
+      unit: "character",
+    });
+
   const beforeRange =
     beforeRangeStart && Editor.range(editor, beforeRangeStart, at);
 

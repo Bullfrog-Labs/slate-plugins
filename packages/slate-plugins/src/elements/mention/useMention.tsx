@@ -16,6 +16,9 @@ export const useMention = (
   const [targetRange, setTargetRange] = useState<Range | null>(null);
   const [valueIndex, setValueIndex] = useState(0);
   const [search, setSearch] = useState("");
+
+  console.log(`1 sp index ${search},${mentionables.length}`);
+
   const values = mentionables
     .filter((c) => c.value.toLowerCase().includes(search.toLowerCase()))
     .slice(0, maxSuggestions);
@@ -40,8 +43,11 @@ export const useMention = (
     [options, targetRange]
   );
 
+  console.log(`1 sp index ${valueIndex},${values.length}`);
+
   const onKeyDownMention = useCallback(
     (e: any, editor: Editor) => {
+      console.log(`2 sp index ${valueIndex},${values.length}`);
       // Match square brackets.
       if (e.key === "[") {
         const { selection } = editor;

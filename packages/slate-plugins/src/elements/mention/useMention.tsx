@@ -77,6 +77,8 @@ export const useMention = (
 
         if (["Tab", "Enter"].includes(e.key)) {
           e.preventDefault();
+          console.log(`sp index ${valueIndex}`);
+          console.dir(values);
           onAddMention(editor, values[valueIndex]);
           return false;
         }

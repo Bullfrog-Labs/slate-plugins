@@ -11,6 +11,7 @@ import { getNextIndex, getPreviousIndex } from "./utils";
 
 export const useMention = (
   mentionables: MentionNodeData[] = [],
+  addMention: (mention: MentionNodeData) => void,
   { maxSuggestions = 10, trigger = "@", ...options }: UseMentionOptions = {}
 ) => {
   const [targetRange, setTargetRange] = useState<Range | null>(null);
@@ -79,7 +80,9 @@ export const useMention = (
         if (["Tab", "Enter"].includes(e.key)) {
           e.preventDefault();
           if (valueIndex < values.length) {
-            onAddMention(editor, values[valueIndex]);
+            const mention = values[valueIndex];
+            addMention(mention);
+            onAddMention(editor, mention);
           } else {
             console.error(
               `skipping mention add since data not consistent; index=${valueIndex}, ` +

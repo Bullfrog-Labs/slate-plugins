@@ -88,6 +88,7 @@ export const Example = () => {
           valueIndex={index}
           options={values}
           onClickMention={onAddMention}
+          rowElementFn={(option) => <em>{option.value}</em>}
         />
       </Slate>
     );

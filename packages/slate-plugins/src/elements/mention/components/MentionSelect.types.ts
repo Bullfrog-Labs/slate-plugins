@@ -1,8 +1,8 @@
-import { IStyle } from '@uifabric/styling';
-import { IStyleFunctionOrObject } from '@uifabric/utilities';
-import { Range } from 'slate';
-import { ReactEditor } from 'slate-react';
-import { MentionNodeData } from '../types';
+import { IStyle } from "@uifabric/styling";
+import { IStyleFunctionOrObject } from "@uifabric/utilities";
+import { Range } from "slate";
+import { ReactEditor } from "slate-react";
+import { MentionNodeData } from "../types";
 
 export interface MentionSelectProps {
   /**
@@ -34,6 +34,11 @@ export interface MentionSelectProps {
    * Callback called when clicking on a mention option
    */
   onClickMention?: (editor: ReactEditor, option: MentionNodeData) => void;
+
+  /**
+   * Row element formatting function. Return a JSX.Element to put in the row item.
+   */
+  rowElementFn?: (option: MentionNodeData) => JSX.Element;
 }
 
 export interface MentionSelectStyleProps {

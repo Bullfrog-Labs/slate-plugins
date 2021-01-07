@@ -8,6 +8,7 @@ import { isCollapsed } from "../../common/queries/isCollapsed";
 import { insertMention } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
 import { getNextIndex, getPreviousIndex } from "./utils";
+import isHotkey from "is-hotkey";
 
 export const useMention = (
   mentionables: MentionNodeData[] = [],
@@ -45,7 +46,7 @@ export const useMention = (
   const onKeyDownMention = useCallback(
     (e: any, editor: Editor) => {
       // Match square brackets.
-      if (e.key === "[") {
+      if (e.key === "[" && !isHotkey("mod", e) && !isHotkey("shift", e)) {
         const { selection } = editor;
         if (selection && isCollapsed(selection)) {
           e.preventDefault();

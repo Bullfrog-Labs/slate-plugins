@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 import {
   BlockquotePlugin,
   BoldPlugin,
@@ -17,20 +17,20 @@ import {
   StrikethroughPlugin,
   withAutoformat,
   withList,
-} from '@udecode/slate-plugins';
-import { createEditor } from 'slate';
-import { withHistory } from 'slate-history';
-import { Slate, withReact } from 'slate-react';
-import { autoformatRules } from '../config/autoformatRules';
+} from "@udecode/slate-plugins";
+import { createEditor } from "slate";
+import { withHistory } from "slate-history";
+import { Slate, withReact } from "slate-react";
+import { autoformatRules } from "../config/autoformatRules";
 import {
   headingTypes,
   initialValueAutoformat,
   options,
   optionsResetBlockTypes,
-} from '../config/initialValues';
+} from "../config/initialValues";
 
 export default {
-  title: 'Handlers/Autoformat',
+  title: "Handlers/Autoformat",
   component: withAutoformat,
 };
 
@@ -57,9 +57,9 @@ export const Example = () => {
     ResetBlockTypePlugin(optionsResetBlockTypes),
     SoftBreakPlugin({
       rules: [
-        { hotkey: 'shift+enter' },
+        { hotkey: "shift+enter" },
         {
-          hotkey: 'enter',
+          hotkey: "enter",
           query: {
             allow: [options.code_block.type, options.blockquote.type],
           },
@@ -69,14 +69,14 @@ export const Example = () => {
     ExitBreakPlugin({
       rules: [
         {
-          hotkey: 'mod+enter',
+          hotkey: "mod+enter",
         },
         {
-          hotkey: 'mod+shift+enter',
+          hotkey: "mod+shift+enter",
           before: true,
         },
         {
-          hotkey: 'enter',
+          hotkey: "enter",
           query: {
             start: true,
             end: true,
@@ -96,7 +96,10 @@ export const Example = () => {
       <Slate
         editor={editor}
         value={value}
-        onChange={(newValue) => setValue(newValue as SlateDocument)}
+        onChange={(newValue) => {
+          setValue(newValue as SlateDocument);
+          console.log(JSON.stringify(newValue));
+        }}
       >
         <EditablePlugins
           plugins={plugins}

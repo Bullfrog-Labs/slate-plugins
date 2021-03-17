@@ -17,6 +17,15 @@ export interface UseMentionOptions extends MentionPluginOptions {
   trigger?: string;
   // Maximum number of suggestions
   maxSuggestions?: number;
+  // Function to match mentionnables for a given search
+  mentionableFilter?: (
+    search: string
+  ) => (mentionable: MentionNodeData) => boolean;
+  // Regex Pattern of a mentionable. Some may want to match emails, so default \W is not enough
+  mentionableSearchPattern?: string;
+
+  // Insert space after mention (defaults to false)
+  insertSpaceAfterMention?: boolean;
 }
 
 // Data of Element node
@@ -41,7 +50,8 @@ export interface MentionRenderElementPropsOptions {
    * Prefix rendered before mention
    */
   prefix?: string;
-  onClick?: ({ value }: { value: string }) => void;
+  onClick?: (mentionNode: MentionNode) => void;
+  renderLabel?: (mentionable: MentionNodeData) => string;
 }
 
 // renderElement props

@@ -1,7 +1,8 @@
-import { Editor, Location } from 'slate';
-import { getAboveByType } from '../../../common/queries/getAboveByType';
+import { Editor, Location, Range } from 'slate';
+import { isCollapsed } from '../../../common';
+import { getAbove } from '../../../common/queries/getAbove';
 import { getParent } from '../../../common/queries/getParent';
-import { isNodeTypeIn } from '../../../common/queries/isNodeTypeIn';
+import { someNode } from '../../../common/queries/someNode';
 import { setDefaults } from '../../../common/utils/setDefaults';
 import { DEFAULTS_LIST } from '../defaults';
 import { ListOptions } from '../types';
@@ -16,13 +17,18 @@ export const getListItemEntry = (
 ) => {
   const { li } = setDefaults(options, DEFAULTS_LIST);
 
-  if (at && isNodeTypeIn(editor, li.type, { at })) {
+  if (at && someNode(editor, { at, match: { type: li.type } })) {
     const selectionParent = getParent(editor, at);
     if (!selectionParent) return;
     const [, paragraphPath] = selectionParent;
 
+    // If selection range includes root list item
+    if (Range.isRange(at) && !isCollapsed(at) && paragraphPath.length === 1) {
+      at = at.focus.path;
+    }
+
     const listItem =
-      getAboveByType(editor, li.type, { at }) ||
+      getAbove(editor, { at, match: { type: li.type } }) ||
       getParent(editor, paragraphPath);
 
     if (!listItem) return;

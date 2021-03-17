@@ -1,6 +1,6 @@
 import { Editor, Transforms } from 'slate';
-import { ELEMENT_PARAGRAPH } from '../../elements/paragraph/defaults';
 import { InsertNodesOptions } from '../types/Transforms.types';
+import { getQueryOptions } from '../utils/match';
 
 export const insertEmptyElement = (
   editor: Editor,
@@ -10,9 +10,9 @@ export const insertEmptyElement = (
   Transforms.insertNodes(
     editor,
     {
-      type: ELEMENT_PARAGRAPH,
+      type,
       children: [{ text: '' }],
     },
-    options
+    getQueryOptions(editor, options)
   );
 };

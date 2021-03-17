@@ -8,6 +8,7 @@ import { CodeBlock } from '@styled-icons/boxicons-regular/CodeBlock';
 import { Subscript, Superscript } from '@styled-icons/foundation';
 import {
   FormatAlignCenter,
+  FormatAlignJustify,
   FormatAlignLeft,
   FormatAlignRight,
   FormatBold,
@@ -68,6 +69,7 @@ import {
   TablePlugin,
   TodoListPlugin,
   ToolbarAlign,
+  ToolbarCodeBlock,
   ToolbarElement,
   ToolbarImage,
   ToolbarLink,
@@ -77,6 +79,7 @@ import {
   UnderlinePlugin,
   useMention,
   withAutoformat,
+  withCodeBlock,
   withDeserializeHTML,
   withImageUpload,
   withInlineVoid,
@@ -294,6 +297,7 @@ export const Example = () => {
     withTable(options),
     withLink(),
     withList(options),
+    withCodeBlock(options),
     withDeserializeHTML({ plugins }),
     withMarks(),
     withImageUpload(),
@@ -369,9 +373,10 @@ export const Example = () => {
               type={options.blockquote.type}
               icon={<FormatQuote />}
             />
-            <ToolbarElement
+            <ToolbarCodeBlock
               type={options.code_block.type}
               icon={<CodeBlock />}
+              options={options}
             />
 
             {/* Marks */}
@@ -402,6 +407,10 @@ export const Example = () => {
             <ToolbarAlign
               type={options.align_right.type}
               icon={<FormatAlignRight />}
+            />
+            <ToolbarAlign
+              type={options.align_justify.type}
+              icon={<FormatAlignJustify />}
             />
             <ToolbarLink {...options} icon={<Link />} />
             <ToolbarImage {...options} icon={<Image />} />

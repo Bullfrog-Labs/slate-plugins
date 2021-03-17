@@ -34,8 +34,9 @@ import {
   SlateDocumentDescendant,
   SlateDocumentFragment,
 } from '@udecode/slate-plugins';
-import faker from 'faker';
+// import faker from 'faker';
 import { Descendant, Text } from 'slate';
+import { DEFAULTS_TAG } from '../examples/tag/defaults';
 
 export const headingTypes = [
   ELEMENT_H1,
@@ -45,6 +46,22 @@ export const headingTypes = [
   ELEMENT_H5,
   ELEMENT_H6,
 ];
+
+export const headingOptions = {
+  ...DEFAULTS_HEADING,
+  h1: {
+    ...DEFAULTS_HEADING.h1,
+    hotkey: ['mod+opt+1', 'mod+shift+1'],
+  },
+  h2: {
+    ...DEFAULTS_HEADING.h2,
+    hotkey: ['mod+opt+2', 'mod+shift+2'],
+  },
+  h3: {
+    ...DEFAULTS_HEADING.h3,
+    hotkey: ['mod+opt+3', 'mod+shift+3'],
+  },
+};
 
 export const options = {
   ...setDefaults(DEFAULTS_PARAGRAPH, {}),
@@ -57,7 +74,7 @@ export const options = {
   ...setDefaults(DEFAULTS_TODO_LIST, {}),
   ...setDefaults(DEFAULTS_TABLE, {}),
   ...setDefaults(DEFAULTS_LIST, {}),
-  ...setDefaults(DEFAULTS_HEADING, {}),
+  ...setDefaults(headingOptions, {}),
   ...setDefaults(DEFAULTS_ALIGN, {}),
   ...setDefaults(DEFAULTS_BOLD, {}),
   ...setDefaults(DEFAULTS_ITALIC, {}),
@@ -68,12 +85,13 @@ export const options = {
   ...setDefaults(DEFAULTS_SUBSUPSCRIPT, {}),
   ...setDefaults(DEFAULTS_HIGHLIGHT, {}),
   ...setDefaults(DEFAULTS_SEARCH_HIGHLIGHT, {}),
+  ...setDefaults(DEFAULTS_TAG, {}),
 };
 
 export const inlineTypes = [options.mention.type, options.link.type];
 
 const resetBlockTypesCommonRule = {
-  types: [options.bold.type, options.code_block.type, options.todo_li.type],
+  types: [options.blockquote.type, options.todo_li.type],
   defaultType: options.p.type,
 };
 
@@ -253,16 +271,20 @@ const HEADINGS = 100;
 const PARAGRAPHS = 7;
 export const initialValueHugeDocument: Descendant[] = [{ children: [] }];
 
+const lorem =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
+
 for (let h = 0; h < HEADINGS; h++) {
   (initialValueHugeDocument[0] as any).children.push({
     type: options.h1.type,
-    children: [{ text: faker.lorem.sentence() }],
+    // children: [{ text: faker.lorem.sentence() }],
+    children: [{ text: lorem }],
   });
 
   for (let p = 0; p < PARAGRAPHS; p++) {
     (initialValueHugeDocument[0] as any).children.push({
       type: options.p.type,
-      children: [{ text: faker.lorem.paragraph() }],
+      children: [{ text: lorem }],
     });
   }
 }
@@ -485,13 +507,13 @@ export const initialValueMentions: SlateDocument = [
           { text: 'Try mentioning characters, like ' },
           {
             type: options.mention.type,
-            value: 'R2-D2',
+            value: '289',
             children: [{ text: '' }],
           },
           { text: ' or ' },
           {
             type: options.mention.type,
-            value: 'Mace Windu',
+            value: '224',
             children: [{ text: '' }],
           },
           { text: '!' },
@@ -602,6 +624,21 @@ export const initialValuePlainText: SlateDocument = [
         type: options.p.type,
         children: [
           { text: 'This is editable plain text, just like a <textarea>!' },
+        ],
+      },
+    ],
+  },
+];
+
+export const initialValueCombobox: SlateDocument = [
+  {
+    children: [
+      {
+        type: options.p.type,
+        children: [
+          { text: 'Example using useCombobox from downshift with # trigger: ' },
+          { type: options.tag.type, children: [{ text: '' }], value: 'tag' },
+          { text: '' },
         ],
       },
     ],
@@ -769,7 +806,24 @@ export const initialValueBasicElements: SlateDocument = [
       },
       {
         type: options.code_block.type,
-        children: [{ text: 'Code block' }],
+        children: [
+          {
+            type: options.code_line.type,
+            children: [
+              {
+                text: "const a = 'Hello';",
+              },
+            ],
+          },
+          {
+            type: options.code_line.type,
+            children: [
+              {
+                text: "const b = 'World';",
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -782,6 +836,7 @@ export const initialValueList: SlateDocument = [
         type: options.h2.type,
         children: [{ text: '✍️ List' }],
       },
+      { type: options.p.type, children: [{ text: '' }] },
       {
         type: options.ul.type,
         children: [
@@ -789,6 +844,66 @@ export const initialValueList: SlateDocument = [
             type: options.li.type,
             children: [
               { type: options.p.type, children: [{ text: 'Bulleted list' }] },
+              {
+                type: options.ul.type,
+                children: [
+                  {
+                    type: options.li.type,
+                    children: [
+                      {
+                        type: options.p.type,
+                        children: [{ text: 'support' }],
+                      },
+                      {
+                        type: options.ul.type,
+                        children: [
+                          {
+                            type: options.li.type,
+                            children: [
+                              {
+                                type: options.p.type,
+                                children: [{ text: 'a' }],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: options.li.type,
+                    children: [
+                      {
+                        type: options.p.type,
+                        children: [{ text: 'nesting' }],
+                      },
+                      {
+                        type: options.ul.type,
+                        children: [
+                          {
+                            type: options.li.type,
+                            children: [
+                              {
+                                type: options.p.type,
+                                children: [{ text: 'b' }],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: options.li.type,
+            children: [
+              {
+                type: options.p.type,
+                children: [{ text: 'c' }],
+              },
             ],
           },
         ],
@@ -954,8 +1069,8 @@ const createSpanningTable = () => ({
       children: [
         {
           type: options.th.type,
-          attributes: { colspan: "2" },
-          children: [createParagraph("Heading", options.bold.type)],
+          attributes: { colspan: '2' },
+          children: [createParagraph('Heading', options.bold.type)],
         },
       ],
     },
@@ -964,11 +1079,11 @@ const createSpanningTable = () => ({
       children: [
         {
           type: options.td.type,
-          children: [createParagraph("Cell 1", options.bold.type)],
+          children: [createParagraph('Cell 1', options.bold.type)],
         },
         {
           type: options.td.type,
-          children: [createParagraph("Cell 2")],
+          children: [createParagraph('Cell 2')],
         },
       ],
     },
@@ -1011,7 +1126,7 @@ export const initialValueTables: SlateDocument = [
         children: [
           {
             text:
-              "This table is an example of rendering a table spanning multiple columns.",
+              'This table is an example of rendering a table spanning multiple columns.',
           },
         ],
       },

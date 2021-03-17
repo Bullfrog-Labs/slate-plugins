@@ -6,6 +6,7 @@ import { CodeBlock } from '@styled-icons/boxicons-regular/CodeBlock';
 import { Subscript, Superscript } from '@styled-icons/foundation';
 import {
   FormatAlignCenter,
+  FormatAlignJustify,
   FormatAlignLeft,
   FormatAlignRight,
   FormatBold,
@@ -51,6 +52,7 @@ import {
   MARK_SUPERSCRIPT,
   MARK_UNDERLINE,
   MediaEmbedPlugin,
+  MentionNodeData,
   MentionPlugin,
   MentionSelect,
   ParagraphPlugin,
@@ -65,6 +67,7 @@ import {
   TablePlugin,
   TodoListPlugin,
   ToolbarAlign,
+  ToolbarCodeBlock,
   ToolbarElement,
   ToolbarImage,
   ToolbarLink,
@@ -74,6 +77,7 @@ import {
   UnderlinePlugin,
   useMention,
   withAutoformat,
+  withCodeBlock,
   withDeserializeHTML,
   withImageUpload,
   withInlineVoid,
@@ -81,9 +85,9 @@ import {
   withList,
   withMarks,
   withNormalizeTypes,
+  withSelectOnBackspace,
   withTable,
   withTrailingNode,
-  withSelectOnBackspace,
 } from '@udecode/slate-plugins';
 import { createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
@@ -131,6 +135,12 @@ const initialValue: Node[] = [
   ...initialValuePasteHtml,
 ];
 
+const renderLabel = (mentionable: MentionNodeData) => {
+  const entry = MENTIONABLES.find((m) => m.value === mentionable.value);
+  if (!entry) return 'unknown option';
+  return `${entry.name} - ${entry.email}`;
+};
+
 export const Plugins = () => {
   const plugins: any[] = [];
 
@@ -142,7 +152,20 @@ export const Plugins = () => {
   if (boolean('ImagePlugin', true)) plugins.push(ImagePlugin(options));
   if (boolean('LinkPlugin', true)) plugins.push(LinkPlugin(options));
   if (boolean('ListPlugin', true)) plugins.push(ListPlugin(options));
-  if (boolean('MentionPlugin', true)) plugins.push(MentionPlugin(options));
+  if (boolean('MentionPlugin', true))
+    plugins.push(
+      MentionPlugin({
+        mention: {
+          ...options.mention,
+          rootProps: {
+            onClick: (mentionable: MentionNodeData) =>
+              console.info(`Hello, I'm ${mentionable.value}`),
+            prefix: '@',
+            renderLabel,
+          },
+        },
+      })
+    );
   if (boolean('TablePlugin', true)) plugins.push(TablePlugin(options));
   if (boolean('MediaEmbedPlugin', true))
     plugins.push(MediaEmbedPlugin(options));
@@ -209,6 +232,7 @@ export const Plugins = () => {
     withTable(options),
     withLink(),
     withList(options),
+    withCodeBlock(options),
     withDeserializeHTML({ plugins }),
     withMarks(),
     withImageUpload(),
@@ -243,6 +267,12 @@ export const Plugins = () => {
       onKeyDownMention,
     } = useMention(MENTIONABLES, {
       maxSuggestions: 10,
+      trigger: '@',
+      insertSpaceAfterMention: false,
+      mentionableFilter: (s: string) => (mentionable: MentionNodeData) =>
+        mentionable.email.toLowerCase().includes(s.toLowerCase()) ||
+        mentionable.name.toLowerCase().includes(s.toLowerCase()),
+      mentionableSearchPattern: '\\S*',
     });
 
     if (boolean('onKeyDownMentions', true)) onKeyDown.push(onKeyDownMention);
@@ -280,7 +310,11 @@ export const Plugins = () => {
             type={options.blockquote.type}
             icon={<FormatQuote />}
           />
-          <ToolbarElement type={options.code_block.type} icon={<CodeBlock />} />
+          <ToolbarCodeBlock
+            type={options.code_block.type}
+            icon={<CodeBlock />}
+            options={options}
+          />
 
           {/* Marks */}
           <ToolbarMark type={MARK_BOLD} icon={<FormatBold />} />
@@ -311,6 +345,10 @@ export const Plugins = () => {
             type={options.align_right.type}
             icon={<FormatAlignRight />}
           />
+          <ToolbarAlign
+            type={options.align_justify.type}
+            icon={<FormatAlignJustify />}
+          />
           <ToolbarLink {...options} icon={<Link />} />
           <ToolbarImage {...options} icon={<Image />} />
         </HeadingToolbar>
@@ -334,7 +372,12 @@ export const Plugins = () => {
             tooltip={{ content: 'Underline (⌘U)' }}
           />
         </BalloonToolbar>
-        <MentionSelect at={target} valueIndex={index} options={values} />
+        <MentionSelect
+          at={target}
+          valueIndex={index}
+          options={values}
+          renderLabel={renderLabel}
+        />
         <EditablePlugins
           plugins={plugins}
           decorate={decorate}

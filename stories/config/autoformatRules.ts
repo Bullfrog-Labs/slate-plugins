@@ -1,9 +1,6 @@
 import {
   AutoformatRule,
-  MARK_BOLD,
-  MARK_CODE,
-  MARK_ITALIC,
-  MARK_STRIKETHROUGH,
+  insertCodeBlock,
   toggleList,
   unwrapList,
 } from '@udecode/slate-plugins';
@@ -69,46 +66,49 @@ export const autoformatRules: AutoformatRule[] = [
     preFormat,
   },
   {
-    type: MARK_BOLD,
+    type: options.bold.type,
     between: ['**', '**'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    type: MARK_BOLD,
+    type: options.bold.type,
     between: ['__', '__'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    type: MARK_ITALIC,
+    type: options.italic.type,
     between: ['*', '*'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    type: MARK_ITALIC,
+    type: options.italic.type,
     between: ['_', '_'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    type: MARK_CODE,
+    type: options.code.type,
     between: ['`', '`'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    type: MARK_STRIKETHROUGH,
+    type: options.strikethrough.type,
     between: ['~~', '~~'],
     mode: 'inline',
     insertTrigger: true,
   },
   {
-    trigger: '`',
     type: options.code_block.type,
     markup: '``',
-    mode: 'inline-block',
-    preFormat: (editor) => unwrapList(editor, options),
+    trigger: '`',
+    triggerAtBlockStart: false,
+    preFormat,
+    format: (editor) => {
+      insertCodeBlock(editor, { select: true }, options);
+    },
   },
 ];

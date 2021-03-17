@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
-import { Ancestor, Editor, NodeEntry } from 'slate';
+import { Editor } from 'slate';
 import { jsx } from '../../../__test-utils__/jsx';
-import { getNodeById } from '../../../common/queries/getNodeById';
-import { moveListItemSublistItemsToList } from './moveListItemSublistItemsToList';
+import { findNode } from '../../../common/queries/findNode';
+import { moveListItemsToList } from './moveListItemsToList';
 
 const input = ((
   <editor>
@@ -52,11 +52,11 @@ const output = ((
 it('should', () => {
   const editor = input;
 
-  const fromListItem = getNodeById(editor, '2') as NodeEntry<Ancestor>;
-  const toList = getNodeById(editor, '1') as NodeEntry<Ancestor>;
+  const fromListItem = findNode(input, { match: { id: '2' } }) as any;
+  const toList = findNode(input, { match: { id: '1' } }) as any;
 
   if (fromListItem && toList) {
-    moveListItemSublistItemsToList(editor, { fromListItem, toList }, {});
+    moveListItemsToList(editor, { fromListItem, toList }, {});
   }
 
   expect(input.children).toEqual(output.children);

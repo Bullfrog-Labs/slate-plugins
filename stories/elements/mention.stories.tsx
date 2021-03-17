@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { text } from "@storybook/addon-knobs";
+import { text, boolean } from "@storybook/addon-knobs";
 import {
   EditablePlugins,
   HeadingPlugin,
@@ -27,6 +27,12 @@ export default {
   },
 };
 
+const renderLabel = (mentionable: MentionNodeData) => {
+  const entry = MENTIONABLES.find((m) => m.value === mentionable.value);
+  if (!entry) return "unknown option";
+  return `${entry.name} - ${entry.email}`;
+};
+
 export const Example = () => {
   const plugins = [
     ParagraphPlugin(options),
@@ -37,7 +43,8 @@ export const Example = () => {
         rootProps: {
           onClick: (mentionable: MentionNodeData) =>
             console.info(`Hello, I'm ${mentionable.value}`),
-          prefix: text("prefix", ""),
+          prefix: text("prefix", "@"),
+          renderLabel,
         },
       },
     }),
@@ -62,8 +69,19 @@ export const Example = () => {
       index,
       target,
       values,
-    } = useMention(MENTIONABLES, {
+    } = useMention(MENTIONABLES, (mention: MentionNodeData) => {}, {
       maxSuggestions: 10,
+      insertSpaceAfterMention: boolean("insert Space After Mention", false),
+      trigger: "@",
+      mentionableFilter: (search: string) => (mentionable: MentionNodeData) =>
+        mentionable.email.toLowerCase().includes(search.toLowerCase()) ||
+        mentionable.name.toLowerCase().includes(search.toLowerCase()),
+      mentionableSearchPattern: boolean(
+        "useCustomMentionableSearchPattern",
+        true
+      )
+        ? text("mentionableSearchPattern", "\\S*")
+        : undefined,
     });
 
     return (
@@ -89,6 +107,7 @@ export const Example = () => {
           options={values}
           onClickMention={onAddMention}
           rowElementFn={(option) => <em>{option.value}</em>}
+          renderLabel={renderLabel}
         />
       </Slate>
     );

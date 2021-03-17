@@ -39,6 +39,7 @@ export interface MentionSelectProps {
    * Row element formatting function. Return a JSX.Element to put in the row item.
    */
   rowElementFn?: (option: MentionNodeData) => JSX.Element;
+  renderLabel?: (mentionable: MentionNodeData) => string;
 }
 
 export interface MentionSelectStyleProps {

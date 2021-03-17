@@ -44,7 +44,6 @@ export const Example = () => {
           onClick: (mentionable: MentionNodeData) =>
             console.info(`Hello, I'm ${mentionable.value}`),
           prefix: text("prefix", "@"),
-          renderLabel,
         },
       },
     }),
@@ -72,13 +71,13 @@ export const Example = () => {
     } = useMention(MENTIONABLES, (mention: MentionNodeData) => {}, {
       maxSuggestions: 10,
       insertSpaceAfterMention: boolean("insert Space After Mention", false),
-      trigger: "@",
+      trigger: "[[",
       mentionableFilter: (search: string) => (mentionable: MentionNodeData) =>
         mentionable.email.toLowerCase().includes(search.toLowerCase()) ||
         mentionable.name.toLowerCase().includes(search.toLowerCase()),
       mentionableSearchPattern: boolean(
         "useCustomMentionableSearchPattern",
-        true
+        false
       )
         ? text("mentionableSearchPattern", "\\S*")
         : undefined,
@@ -106,8 +105,7 @@ export const Example = () => {
           valueIndex={index}
           options={values}
           onClickMention={onAddMention}
-          rowElementFn={(option) => <em>{option.value}</em>}
-          renderLabel={renderLabel}
+          rowElementFn={(option) => <em>{option.name}</em>}
         />
       </Slate>
     );

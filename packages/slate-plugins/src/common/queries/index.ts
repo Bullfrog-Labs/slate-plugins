@@ -30,6 +30,7 @@ export * from "./isFirstChild";
 export * from "./isMarkActive";
 export * from "./queryNode";
 export * from "./isPointAtWordEnd";
+export * from "./isPointAtMentionEnd";
 export * from "./isRangeAcrossBlocks";
 export * from "./isRangeInSingleText";
 export * from "./isSelectionAtBlockEnd";

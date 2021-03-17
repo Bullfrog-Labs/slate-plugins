@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend';
-import { useEditor } from 'slate-react';
-import { useDragBlock } from './useDragBlock';
-import { useDropBlockOnEditor } from './useDropBlockOnEditor';
+import { useState } from "react";
+import { getEmptyImage } from "react-dnd-html5-backend";
+import { useEditor } from "slate-react";
+import { useDragBlock } from "./useDragBlock";
+import { useDropBlockOnEditor } from "./useDropBlockOnEditor";
 
 export const useDndBlock = ({
   id,
@@ -15,8 +15,9 @@ export const useDndBlock = ({
 }) => {
   const editor = useEditor();
 
-  const [dropLine, setDropLine] = useState<'' | 'top' | 'bottom'>('');
+  const [dropLine, setDropLine] = useState<"" | "top" | "bottom">("");
 
+  // @ts-ignore
   const [{ isDragging }, dragRef, preview] = useDragBlock(editor, id);
   const [{ isOver }, drop] = useDropBlockOnEditor(editor, {
     id,
@@ -33,7 +34,7 @@ export const useDndBlock = ({
   }
 
   if (!isOver && dropLine) {
-    setDropLine('');
+    setDropLine("");
   }
 
   return {

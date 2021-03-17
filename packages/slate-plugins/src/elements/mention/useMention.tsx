@@ -181,7 +181,7 @@ export const useMention = (
 
         if (beforeMatch && isPointAtMentionEnd(editor, { at: cursor })) {
           setTargetRange(range as Range);
-          const [, word] = beforeMatch;
+          const word = beforeMatch[1];
           setSearch(word);
           setValueIndex(0);
           return;

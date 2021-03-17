@@ -46,7 +46,11 @@ export const useMention = (
   const onKeyDownMention = useCallback(
     (e: any, editor: Editor) => {
       // Match square brackets.
-      if (e.key === "[" && !isHotkey("mod", e) && !isHotkey("shift", e)) {
+      if (
+        e.key === "[" &&
+        !isHotkey("mod+[", e) &&
+        !isHotkey("mod+shift+[", e)
+      ) {
         const { selection } = editor;
         if (selection && isCollapsed(selection)) {
           e.preventDefault();

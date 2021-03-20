@@ -168,8 +168,10 @@ export const useMention = (
     (editor: Editor) => {
       const { selection } = editor;
 
-      if (selection && isCollapsed(selection)) {
-        const cursor = Range.start(selection);
+      if (selection) {
+        const cursor = Range.isBackward(selection)
+          ? selection.anchor
+          : selection.focus;
 
         const { range, match: beforeMatch } = mentionableSearchPattern
           ? // new behavior, searches for matching string against pattern right after the trigger

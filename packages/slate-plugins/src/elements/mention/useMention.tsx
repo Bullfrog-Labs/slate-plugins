@@ -9,7 +9,7 @@ import {
   isWordAfterMentionTrigger,
 } from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
-import { insertMention } from "./transforms";
+import { insertMention, wrapMentionBrackets } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
 import { getNextIndex, getPreviousIndex } from "./utils";
 import isHotkey from "is-hotkey";
@@ -113,6 +113,11 @@ export const useMention = (
           if (middlePoint) {
             Transforms.select(editor, middlePoint);
           }
+        }
+
+        if (selection && !isCollapsed(selection)) {
+          e.preventDefault();
+          wrapMentionBrackets(editor, selection);
         }
 
         return setTargetRange(null);

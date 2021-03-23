@@ -19,25 +19,20 @@ const rangeToStr = (range: Range) => {
 };
 
 export const wrapMentionBrackets = (editor: Editor, selection: Range) => {
-  console.dir(rangeToStr(selection));
+  console.debug(rangeToStr(selection));
 
   const containingNode = Editor.node(editor, selection);
-  console.log("containing node:");
-  console.dir(containingNode);
+  console.debug(`containing node: ${JSON.stringify(containingNode)}`);
 
   const marksObj = Editor.marks(editor);
   const marks = marksObj ? Object.keys(marksObj) : [];
 
   if (!containingNode[0].text || marks.length > 0) {
-    console.log("cannot wrap a selection that is not simple text, ignoring");
+    console.debug("cannot wrap a selection that is not simple text, ignoring");
     return;
   }
 
-  const anchor = selection.anchor;
-  const focus = selection.focus;
-
-  const leftPoint = Range.isBackward(selection) ? focus : anchor;
-  const rightPoint = Range.isBackward(selection) ? anchor : focus;
+  const [leftPoint, rightPoint] = Range.edges(selection);
 
   Transforms.insertText(editor, "[", { at: leftPoint });
   const newRightPoint =
@@ -57,7 +52,7 @@ export const wrapMentionBrackets = (editor: Editor, selection: Range) => {
   const newFocus = Range.isBackward(selection) ? newLeftPoint : newRightPoint;
 
   const newSelection = Editor.range(editor, newAnchor, newFocus);
-  console.log(`new selection: ${rangeToStr(newSelection)}`);
+  console.debug(`new selection: ${rangeToStr(newSelection)}`);
 
   Transforms.select(editor, newSelection);
 };

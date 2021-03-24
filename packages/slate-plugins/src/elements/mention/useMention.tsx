@@ -206,8 +206,6 @@ export const useMention = (
       setValueIndex,
       trigger,
       mentionableSearchPattern,
-      valueIndex,
-      values.length,
     ]
   );
 

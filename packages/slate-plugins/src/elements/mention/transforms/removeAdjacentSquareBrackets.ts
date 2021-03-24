@@ -2,7 +2,7 @@ import { Editor, Transforms } from "slate";
 import { isCollapsed } from "../../../common/queries/isCollapsed";
 import { getText } from "../../../common/queries/getText";
 
-export const removeAdjacentSquareBrackets = (editor: Editor) => {
+export const removeAdjacentSquareBrackets = (editor: Editor): boolean => {
   const { selection } = editor;
   if (selection && isCollapsed(selection)) {
     const beforeCursor = Editor.before(editor, selection, {
@@ -21,11 +21,11 @@ export const removeAdjacentSquareBrackets = (editor: Editor) => {
     const rangeText = getText(editor, range);
 
     if (rangeText !== "[]") {
-      console.debug(`not a [] sandwich; text=${rangeText}`);
-      return;
+      return false;
     }
 
     Transforms.delete(editor, { at: range });
-    console.debug(`removed ${rangeText}`);
+    return true;
   }
+  return false;
 };

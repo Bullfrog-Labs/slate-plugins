@@ -130,8 +130,9 @@ export const useMention = (
       }
 
       if (e.key === "Backspace") {
-        console.log("backspace " + e.key);
-        removeAdjacentSquareBrackets(editor);
+        if (removeAdjacentSquareBrackets(editor)) {
+          e.preventDefault();
+        }
       }
 
       if (targetRange) {

@@ -9,7 +9,11 @@ import {
 import { isCollapsed } from "../../common/queries/isCollapsed";
 import { insertMention } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
-import { getNextIndex, getPreviousIndex } from "./utils";
+import {
+  getNextIndex,
+  getPreviousIndex,
+  isBetweenSquareBrackets,
+} from "./utils";
 import isHotkey from "is-hotkey";
 
 export const matchesTriggerAndPattern = (
@@ -127,6 +131,15 @@ export const useMention = (
         }
 
         return setTargetRange(null);
+      }
+
+      if (e.key === "Backspace") {
+        console.log("backspace " + e.key);
+        if (isBetweenSquareBrackets(editor)) {
+          //e.preventDefault();
+          //removeAdjacentSquareBrackets(editor);
+          console.log("between");
+        }
       }
 
       if (targetRange) {

@@ -1,10 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Editor, Point, Range, Transforms } from "slate";
 import { escapeRegExp } from "../../common";
 import {
   getText,
-  isPointAtWordEnd,
-  isWordAfterTrigger,
   isPointAtMentionEnd,
   isWordAfterMentionTrigger,
 } from "../../common/queries";
@@ -52,6 +50,10 @@ export const matchesTriggerAndPattern = (
   };
 };
 
+const getInitialIndex = (initialIndex: number, values: MentionNodeData[]) => {
+  return Math.min(initialIndex, Math.max(values.length - 1, 0));
+};
+
 export const useMention = (
   mentionables: MentionNodeData[] = [],
   addMention: (mention: MentionNodeData) => void,
@@ -63,15 +65,24 @@ export const useMention = (
     mentionableSearchPattern,
     insertSpaceAfterMention,
     ...options
-  }: UseMentionOptions = {}
+  }: UseMentionOptions = {},
+  initialIndex: number = 0
 ) => {
   const [targetRange, setTargetRange] = useState<Range | null>(null);
-  const [valueIndex, setValueIndex] = useState(0);
+
   const [search, setSearch] = useState("");
 
   const values = mentionables
     .filter(mentionableFilter(search))
     .slice(0, maxSuggestions);
+
+  const [valueIndex, setValueIndex] = useState(
+    getInitialIndex(initialIndex, values)
+  );
+
+  useEffect(() => {
+    setValueIndex(getInitialIndex(initialIndex, values));
+  }, [values, initialIndex]);
 
   const onAddMention = useCallback(
     (editor: Editor, data: MentionNodeData) => {
@@ -183,7 +194,6 @@ export const useMention = (
           setTargetRange(range as Range);
           const word = beforeMatch[1];
           setSearch(word);
-          setValueIndex(0);
           return;
         }
 
@@ -196,6 +206,8 @@ export const useMention = (
       setValueIndex,
       trigger,
       mentionableSearchPattern,
+      valueIndex,
+      values.length,
     ]
   );
 

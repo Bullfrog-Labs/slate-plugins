@@ -50,7 +50,6 @@ export const MentionElementBase = ({
       onClick={getHandler(onClick, element)}
       {...htmlAttributes}
     >
-      {prefix}
       {renderLabel(element)}
       {children}
     </Tag>

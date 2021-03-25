@@ -1,5 +1,5 @@
 import { Editor, Point } from "slate";
-import { getText } from "./getText";
+import { getText } from "../../../common/queries/getText";
 
 /**
  * Is the word at the point after a trigger (punctuation character)

@@ -1,11 +1,7 @@
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { Editor, Point, Range, Transforms } from "slate";
 import { escapeRegExp } from "../../common";
-import {
-  getText,
-  isPointAtMentionEnd,
-  isWordAfterMentionTrigger,
-} from "../../common/queries";
+import { getText, isPointAtMentionEnd } from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
 import {
   insertMention,
@@ -13,7 +9,11 @@ import {
   wrapMentionBrackets,
 } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
-import { getNextIndex, getPreviousIndex } from "./utils";
+import {
+  getNextIndex,
+  getPreviousIndex,
+  isWordAfterMentionTrigger,
+} from "./utils";
 import isHotkey from "is-hotkey";
 
 export const matchesTriggerAndPattern = (

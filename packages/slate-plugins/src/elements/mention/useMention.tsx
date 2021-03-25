@@ -7,7 +7,11 @@ import {
   isWordAfterMentionTrigger,
 } from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
-import { insertMention, wrapMentionBrackets } from "./transforms";
+import {
+  insertMention,
+  removeAdjacentSquareBrackets,
+  wrapMentionBrackets,
+} from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
 import { getNextIndex, getPreviousIndex } from "./utils";
 import isHotkey from "is-hotkey";
@@ -136,6 +140,12 @@ export const useMention = (
         }
 
         return setTargetRange(null);
+      }
+
+      if (e.key === "Backspace") {
+        if (removeAdjacentSquareBrackets(editor)) {
+          e.preventDefault();
+        }
       }
 
       if (targetRange) {

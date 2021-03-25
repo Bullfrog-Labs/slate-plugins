@@ -39,5 +39,4 @@ export * from "./isSelectionExpanded";
 export * from "./isStart";
 export * from "./isTextByPath";
 export * from "./isWordAfterTrigger";
-export * from "./isWordAfterMentionTrigger";
 export * from "./someNode";

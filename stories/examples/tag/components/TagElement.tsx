@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { classNamesFunction, styled } from '@uifabric/utilities';
-import { Transforms } from 'slate';
-import { useEditor, useFocused, useSelected } from 'slate-react';
-import { useHotkeys } from '../hooks/useHotkeys';
-import { useOnMouseClick } from '../hooks/useOnMouseClick';
+import * as React from "react";
+import { classNamesFunction, styled } from "@uifabric/utilities";
+import { Transforms } from "slate";
+import { useEditor, useFocused, useSelected } from "slate-react";
+import { useHotkeys } from "../hooks/useHotkeys";
+import { useOnMouseClick } from "../hooks/useOnMouseClick";
 import {
   TagElementProps,
   TagElementStyleProps,
   TagElementStyles,
-} from '../types';
-import { getTagElementStyles } from './TagElement.styles';
+} from "../types";
+import { getTagElementStyles } from "./TagElement.styles";
 
 const getClassNames = classNamesFunction<
   TagElementStyleProps,
@@ -25,16 +25,15 @@ export const TagElementBase = ({
   children,
   element,
   styles,
-  className,
 }: TagElementProps) => {
   const editor = useEditor();
   const selected = useSelected();
   const focused = useFocused();
 
-  const onClickProps = useOnMouseClick(() => console.info('tag clicked'));
+  const onClickProps = useOnMouseClick(() => console.info("tag clicked"));
 
   useHotkeys(
-    'backspace',
+    "backspace",
     () => {
       if (selected && focused && editor.selection) {
         Transforms.move(editor);
@@ -43,7 +42,7 @@ export const TagElementBase = ({
     [selected, focused]
   );
   useHotkeys(
-    'delete',
+    "delete",
     () => {
       if (selected && focused && editor.selection) {
         Transforms.move(editor, { reverse: true });
@@ -53,7 +52,6 @@ export const TagElementBase = ({
   );
 
   const classNames = getClassNames(styles, {
-    className,
     // Other style props
     selected,
     focused,
@@ -82,5 +80,5 @@ export const TagElement = styled<
   TagElementStyleProps,
   TagElementStyles
 >(TagElementBase, getTagElementStyles, undefined, {
-  scope: 'TagElement',
+  scope: "TagElement",
 });

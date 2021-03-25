@@ -7,7 +7,7 @@ import {
   isWordAfterMentionTrigger,
 } from "../../common/queries";
 import { isCollapsed } from "../../common/queries/isCollapsed";
-import { insertMention } from "./transforms";
+import { insertMention, wrapMentionBrackets } from "./transforms";
 import { MentionNodeData, UseMentionOptions } from "./types";
 import { getNextIndex, getPreviousIndex } from "./utils";
 import isHotkey from "is-hotkey";
@@ -130,6 +130,11 @@ export const useMention = (
           }
         }
 
+        if (selection && !isCollapsed(selection)) {
+          e.preventDefault();
+          wrapMentionBrackets(editor, selection);
+        }
+
         return setTargetRange(null);
       }
 
@@ -178,8 +183,10 @@ export const useMention = (
     (editor: Editor) => {
       const { selection } = editor;
 
-      if (selection && isCollapsed(selection)) {
-        const cursor = Range.start(selection);
+      if (selection) {
+        const cursor = Range.isBackward(selection)
+          ? selection.anchor
+          : selection.focus;
 
         const { range, match: beforeMatch } = mentionableSearchPattern
           ? // new behavior, searches for matching string against pattern right after the trigger

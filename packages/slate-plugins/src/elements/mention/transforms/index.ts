@@ -1,1 +1,2 @@
-export * from './insertMention';
+export * from "./insertMention";
+export * from "./wrapMentionBrackets";

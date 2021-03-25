@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { Editor, Point, Range, Transforms } from "slate";
 import { escapeRegExp } from "../../common";
 import {
@@ -72,9 +72,13 @@ export const useMention = (
 
   const [search, setSearch] = useState("");
 
-  const values = mentionables
-    .filter(mentionableFilter(search))
-    .slice(0, maxSuggestions);
+  // Need to make sure this doesnt change if the args dont, to make the useEffect
+  // work below.
+  const values = useMemo(
+    () =>
+      mentionables.filter(mentionableFilter(search)).slice(0, maxSuggestions),
+    [mentionables, search, maxSuggestions]
+  );
 
   const [valueIndex, setValueIndex] = useState(
     getInitialIndex(initialIndex, values)
